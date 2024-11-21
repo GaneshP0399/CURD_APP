@@ -1,0 +1,92 @@
+<ng-container>
+    <div class="flex flex-column align-items-center justify-content-center gap-4">
+        <div>
+
+            <p-button (click)="open('Add Product')" label="Add Product" />
+            <p-table [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+
+                        <th >Name</th>
+                        <th >Category</th>
+                        <th >Price</th>
+                        <th>Action</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.category }}</td>
+                        <td>{{ product.price | currency: 'INR'}}</td>
+                        <td><span href="javascript.void(0)"
+                                (click)="edit(rowIndex,product,'Update Product')"><i class="pi pi-pencil"></i></span> | <span
+                                href="javascript.void(0)" (click)="delete(rowIndex)"><i class="pi pi-trash"></i></span></td>
+                       
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+        <div>
+            <app-bar-chart [product]="bardetails"></app-bar-chart>
+        </div>
+    </div>
+</ng-container>
+
+<p-dialog header="Header" [draggable]="false" [(visible)]="visible" [modal]="true" [style]="{ width: '25rem' }">
+    <ng-template pTemplate="header">
+        <div class="inline-flex align-items-center justify-content-center gap-2">
+            <span class="font-bold white-space-nowrap">
+                {{formName}}
+            </span>
+        </div>
+    </ng-template>
+
+
+    <form [formGroup]="form" class="p-fluid">
+        <div class="field mb-3">
+            <label for="name" class="font-semibold">Name:</label>
+            <input pInputText type="text" id="name"  formControlName="name" />
+       <small *ngIf="formControl.name.invalid && formControl.name.touched" class="p-error">
+            <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+            <span *ngIf="formControl.name.errors?.['required']">Name is required.</span>
+            <span *ngIf="formControl.name.errors?.['minlength']">Minimum 2 characters required.</span>
+            <span *ngIf="formControl.name.errors?.['maxlength']">Maximum 80 characters allowed.</span>
+            <span *ngIf="formControl.name.errors?.['pattern']">Only characters are allowed.</span>
+        </small>
+        </div>
+    
+        <!-- Category Field -->
+        <div class="field mb-3">
+            <label for="category">Category:</label>
+            <input pInputText type="text" id="category" formControlName="category" />
+         
+            <small *ngIf="formControl.category.invalid && formControl.category.touched" class="p-error">
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <span *ngIf="formControl.category.errors?.['required']">Category is required.</span>
+                <span *ngIf="formControl.category.errors?.['minlength']">Minimum 2 characters required.</span>
+                <span *ngIf="formControl.category.errors?.['maxlength']">Maximum 80 characters allowed.</span>
+                <span *ngIf="formControl.category.errors?.['pattern']">Only characters are allowed.</span>
+            </small>
+        </div>
+    
+        <!-- Price Field -->
+        <div class="field mb-3">
+            <label for="price">Price:</label>
+            <input pInputText type="text" id="price" formControlName="price" maxlength="10"/>
+       
+            <small *ngIf="formControl.price.invalid && formControl.price.touched" class="p-error">
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <span *ngIf="formControl.price.errors?.['required']">Price is required.</span>
+                <span *ngIf="formControl.price.errors?.['pattern']">Only numbers are allowed.</span>
+            </small>
+        </div>
+    </form>
+    <ng-template pTemplate="footer">
+
+        <p-button label="Close" type="button" id="close" (click)="visible = false"></p-button>
+        <p-button label="Add Product" type="button" class="btn btn-primary" *ngIf="formName == 'Add Product'"
+            (click)="addNewProduct()"></p-button>
+        <p-button label="Update Product" type="button" class="btn btn-primary" *ngIf="formName == 'Update Product'"
+            (click)="update()"></p-button>
+    </ng-template>
+</p-dialog>
